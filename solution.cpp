@@ -18,12 +18,14 @@ using namespace std;
 //         int receiver_id;
 // };
 
+// define of message
 struct message{
     int data;
     int sender_id;
     int receiver_id;
 };
 
+//define of semaphore and P&V operation
 class Semaphore
 {
 public:
@@ -56,7 +58,10 @@ private:
     condition_variable cond;
     
 };
+// semaphore for print, so that we can see output line by line.
 Semaphore print(1);
+
+//mailbox define, mailbox consists of two semaphore space for adding message and record for poping message
 class mailbox{
     public:
         mailbox(int maxsize=0):space(Semaphore(maxsize)),record(Semaphore(0)){
@@ -77,15 +82,15 @@ class mailbox{
         
 };
 
-int maxsize = 1000;
-const int num = 4;
+int maxsize = 10;
+const int num = 4;//num of producers and consumers
 const int producer_num = num;
 //mailbox producer_mailboxes[producer_num]{mailbox(maxsize),mailbox(maxsize)};//,mailbox(maxsize),mailbox(maxsize)};
 //mailbox consumer_mailboxes[producer_num]{mailbox(maxsize),mailbox(maxsize)};//,mailbox(maxsize),mailbox(maxsize)};
 mailbox producer_mailboxes[producer_num]{mailbox(maxsize) , mailbox(maxsize),mailbox(maxsize),mailbox(maxsize)};
 mailbox consumer_mailboxes[producer_num]{mailbox(maxsize) ,mailbox(maxsize),mailbox(maxsize),mailbox(maxsize)};
-int counter = 0;
-int counter2 = 0;
+int counter = 0;//message count for consumer, which is also the request resource of consumer
+int counter2 = 0;//count for producer, basically just to keep producer thread going on
 
 class producer{
     public:
@@ -172,6 +177,7 @@ class consumer{
         mailbox &self_box;
 };
 
+//entry function for producer and consumer thread
 void pro_entry(int idx){
     
     producer new_pro(idx);
@@ -189,9 +195,9 @@ int main(){
     thread producers_thread[num], consumers_thread[num];
     for (int i = 0; i < num; ++i)
     {
-        consumers_thread[i] = thread(con_entry,i);
+        consumers_thread[i] = std::thread(con_entry,i);
         //thread con_thread(test,1);
-        producers_thread[i] = thread(pro_entry, i);
+        producers_thread[i] = std::thread(pro_entry, i);
     }
     //cout<<"now";
     for (int i = 0; i < num; ++i)
