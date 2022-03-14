@@ -240,7 +240,7 @@ int main () {
     {
     while ( getline (myfile_in,line) )
     {
-        cout << line << '\n';
+        //cout << line << '\n';
         istringstream in(line);
         while(in>> t) {
         q.push_back(stoi(t));
@@ -251,7 +251,7 @@ int main () {
     else cout << "Unable to open file"; 
 
     for(int i =0;i<q.size();i++){
-        cout<<to_string(q[i])+" ";
+        //cout<<to_string(q[i])+" ";
     }
     // choose frame size and algorithm
     cout<< "choosing algorithm 0:FIFO, 1:LRU, 2:second chance";
