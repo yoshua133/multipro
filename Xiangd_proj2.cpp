@@ -4,6 +4,7 @@
 #include <string>
 #include <sstream> 
 #include <ctime>
+#include <deque>
 using namespace std;
 void generate_file(){
     srand (0);//设置种子
